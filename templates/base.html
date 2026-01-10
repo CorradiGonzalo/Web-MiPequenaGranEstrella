@@ -1,0 +1,30 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mi Pequeña Gran Estrella</title>
+    <link rel="stylesheet" href="{% static 'css/styles.css' %}">
+</head>
+<body>
+    <header class="main-header">
+        <div class="logo">
+            <a href="{% url 'store:home' %}">MPGE</a>
+        </div>
+        <nav>
+            <a href="{% url 'store:home' %}">Tienda</a>
+            <a href="{% url 'store:cart_detail %'}">Mi Carrito</a>
+        </nav>
+    </header>
+
+    <main>
+        {% block content %}
+        {% endblock %}
+    </main>
+
+    <footer>
+        <p>&copy; 2026 Mi Pequeña Gran Estrella</p>
+    </footer>
+</body>
+</html>
