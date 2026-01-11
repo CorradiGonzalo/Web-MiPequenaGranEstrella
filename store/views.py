@@ -17,7 +17,7 @@ def release_expired_stock():
         item.delete()
 
 def home(request):
-    release_expired_stock()
+    #release_expired_stock()
     products = Product.objects.filter(is_active=True)
     return render(request, 'store/home.html', {'products': products})
 
@@ -90,6 +90,52 @@ def cart_detail(request):
         return render(request, 'store/cart.html', context)
 
 def add_to_cart(request, product_id):
-    print("Exito! {inventory_item.product.name} reservado")
+    release_expired_stock() 
 
-    return redirect('store:cart_detail')
+    print(f"--- INTENTO DE AGREGAR PRODUCTO ID: {product_id} ---")
+    
+    if request.method == 'POST':
+        inventory_id = request.POST.get('inventory_id')
+        print(f"1. Inventory ID recibido: {inventory_id}")
+        
+        if not inventory_id:
+            print("ERROR: No se seleccionó talle")
+            messages.error(request, "Seleccioná un talle")
+            return redirect('store:product_detail', slug=Product.objects.get(id=product_id).slug)
+
+        inventory_item = get_object_or_404(ProductInventory, id=inventory_id)
+        print(f"2. Stock actual: {inventory_item.stock}")
+        
+        if inventory_item.stock > 0:
+            if request.user.is_authenticated:
+                print(f"3. Usuario autenticado: {request.user}")
+                
+                # CREAR EL CARRITO
+                cart, created = Cart.objects.get_or_create(user=request.user)
+                print(f"4. Carrito obtenido. ¿Fue creado recién?: {created}")
+                print(f"   ID del Carrito: {cart.id}")
+
+                # CREAR EL ITEM
+                cart_item = CartItem.objects.create(
+                    cart=cart,
+                    product=inventory_item.product,
+                    stock_item=inventory_item,
+                    quantity=1
+                )
+                print(f"5. Item Creado: {cart_item}")
+                
+                # DESCONTAR STOCK
+                inventory_item.stock -= 1
+                inventory_item.save()
+                print("6. Stock descontado y guardado.")
+
+                return redirect('store:cart_detail')
+            else:
+                print("ERROR: Usuario no logueado")
+                return redirect('/admin/')
+        else:
+            print("ERROR: No hay stock")
+            messages.error(request, "Sin stock")
+    
+    print("Saliendo sin agregar...")
+    return redirect('store:product_detail', slug=Product.objects.get(id=product_id).slug)

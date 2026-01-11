@@ -2,59 +2,65 @@
 {% load static %}
 
 {% block content %}
-
-<div class="container cart-container">
+<div class="cart-container">
     <h2>Tu Carrito de Compras</h2>
 
-    {% if items %}
-        <div class="cart-table">
-            <div class="cart-header">
-                <span>Producto</span>
-                <span>Talle</span>
-                <span>Precio</span>
-                <span>Cantidad</span>
-                <span>Subtotal</span>
-            </div>
+    {% if not cart or not items %}
+        <div class="empty-cart">
+            <p>Tu carrito está vacío 😢</p>
+            <a href="{% url 'store:home' %}" class="btn-primary">Ir a la Tienda</a>
+        </div>
+    {% else %}
+        <div class="cart-header">
+            <div class="col-product">PRODUCTO</div>
+            <div class="col-size">TALLE</div>
+            <div class="col-price">PRECIO</div>
+            <div class="col-qty">CANTIDAD</div>
+            <div class="col-total">TOTAL</div>
+        </div>
 
+        <div class="cart-items-list">
             {% for item in items %}
             <div class="cart-row">
-                <div class="cart-product">
+                <div class="col-product product-info">
                     {% if item.product.image %}
                         <img src="{{ item.product.image.url }}" alt="{{ item.product.name }}">
                     {% else %}
-                        <div class="cart-placeholder"></div>
+                        <div class="placeholder-img"></div>
                     {% endif %}
-                        <p>{{ item.product.name }}</p>
+                    <span>{{ item.product.name }}</span>
                 </div>
-                <div><span class="badge">{{ item.stock_item.size }}</span></div>
-                <div>${{ item.product.proce }}</div>
-                <div>{{ item.quantity }}</div>
-                <div class="row-total">${{ item.total_price }}</div>
+
+                <div class="col-size">
+                    <span class="badge">{{ item.stock_item.size.name }}</span>
+                </div>
+
+                <div class="col-price">
+                    ${{ item.product.price }}
+                </div>
+
+                <div class="col-qty">
+                    {{ item.quantity }}
+                </div>
+
+                <div class="col-total">
+                    <strong>${{ item.total_price }}</strong>
+                </div>
             </div>
             {% endfor %}
         </div>
 
         <div class="cart-summary">
+            <p class="timer-warning">
+                Tenés 15 minutos para completar la compra o tus productos volverán a estar disponibles.
+            </p>
             <h3>Total a Pagar: <span>${{ total }}</span></h3>
-            <p class="timer-warning">Tenes 15 minutos para completar la compra o tus productos volveran a estar disponibles para las demas personas.</p>
             
             <div class="cart-actions">
-                <a href="{% url 'store:home' %}" class="btn btn-online">
-                    ← Seguir Comprando
-                </a>
-
-                <a href="#" class="btn btn-primary">
-                    Finalizar Compra
-                </a>
+                <a href="{% url 'store:home' %}" class="btn-outline">← Seguir Comprando</a>
+                <a href="#" class="btn-primary">Finalizar Compra</a>
             </div>
         </div>
-
-        {% else %}
-            <div class="empty-cart">
-                <p>Tu carrito esta vacio 😢</p>
-                <a href="{% url 'store:home' %}" class="btn">Ir a la Tienda</a>
-            </div>
-        {% endif %}
+    {% endif %}
 </div>
-
 {% endblock %}
