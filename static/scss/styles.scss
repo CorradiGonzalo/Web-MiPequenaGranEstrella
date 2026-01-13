@@ -546,3 +546,77 @@ body {
         }
     }
 }
+
+//BARRA DE FILTROS//
+.filter-bar {
+    background-color: white;
+    padding: 20px;
+    border-radius: 15px;
+    margin-bottom: 40px;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.03);
+
+    form {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 20px;
+        justify-content: space-between;
+        align-items: center;
+
+        @media (max-width: 768px) {
+            flex-direction: column;
+        }
+    }
+
+    .filter-select {
+        padding: 10px 15px;
+        border: 1px solid #ddd;
+        border-radius: 25px;
+        background-color: #fff;
+        color: #555;
+        font-size: 0.9rem;
+        cursor: pointer;
+        outline: none;
+        min-width: 150px;
+
+        &:focus {
+            border-color: $primary-color;
+        }
+
+        @media (max-width: 768px) {
+            width: 100%;
+        }
+    }
+
+    .btn-filter {
+        background-color: $primary-color;
+        color: white;
+        border: none;
+        padding: 10px 20px;
+        border: 25px;
+        cursor: pointer;
+        font-weight: bold;
+        transition: background 0.2s;
+
+        &:hover {
+            background-color: $primary-color;
+        }
+
+        @media (max-width: 768px) {
+            width: 100%;
+        }
+    }
+
+    .btn-clear {
+        text-decoration: none;
+        color: #999;
+        padding: 10px 15px;
+        font-size: 0.9rem;
+        align-self: center;
+
+        &:hover {
+            color: #555;
+            text-decoration: underline;
+        }
+    }
+    
+}
