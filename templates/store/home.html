@@ -6,6 +6,43 @@
     <div class="container">
         <h2 style="text-align: center; color: #A89589; margin: 40px 0;">NUESTROS PRODUCTOS</h2>
 
+        <div class="filter-bar">
+            <form method="GET" action="{% url 'store:home' %}">
+                <div class="filter-group">
+                    <select name="category" class="filter-select">
+                        <option value="">Todas las Categorias</option>
+                        {% for category in categorias %}
+                            <option value="{{ category.id }}" {% if request.GET.category == category.id|stringformat:"s" %}selected{% endif %}>
+                                {{ category.name }}
+                            </option>
+                            {% endfor %}
+                    </select>
+
+                    <select name="size" class="filter-select">
+                        <option value="">Todos los Talles</option>
+                        {% for size in sizes %}
+                            <option value="{{ size.id }}" {% if request.GET.size == size.id|stringformat:"s" %}selected{% endif %}>
+                                Talle: {{ size.name }}
+                            </option>
+                        {% endfor %}
+                    </select>
+
+                    <select name="sort" class="filter-select">
+                        <option value="">Ordenar por...</option>
+                        <option value="price-asd" {% if request.GET.sort == "price_asc" %}selected{% endif %}>Menor Precio</option>
+                        <option value="price-desc" {% if request.GET.sort == "price_desc" %}selected{% endif %}>Mayor Precio</option>
+                        <option value="name-asd" {% if request.GET.sort == "name_asd" %}selected{% endif %}>Nombre (A-Z)</option>
+                        <option value="name-desc" {% if request.GET.sort == "name_desc" %}selected{% endif %}>Nombre (Z-A)</option>
+                    </select>
+                </div>
+
+                <div class="filter-action">
+                    <button type="submit" class="btn-filter">Aplicar filtros</button>
+                    <a href="{% url 'store:home' %}" class="btn-clear">Limpiar</a>
+                </div>
+            </form>
+        </div>
+
         <div class="product-grid" style="display: grid; grid-template-columns: repeat(auto-fill, minmax(250px, 1fr)); gap: 30px;">
             {% for product in products %}
                 <div class="product-card">
